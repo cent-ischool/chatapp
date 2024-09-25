@@ -28,8 +28,7 @@ class OpenAIAPI:
             ],
             "temperature": temperature,
             "top_p": top_p,
-            "max_tokens": max_tokens,
-            "stream": False
+            "max_tokens": max_tokens        
         }
 
     def _append_message_to_payload(self, role, content):
@@ -45,8 +44,8 @@ class OpenAIAPI:
             }
         )
 
-        
     def generate_response(self, user_text):
+        self.payload['stream'] = False
         self._append_message_to_payload("user", user_text)
         response = requests.post(self.endpoint, headers=self.headers, json=self.payload)
         response.raise_for_status()
@@ -54,24 +53,28 @@ class OpenAIAPI:
         assistant_text = data['choices'][0]['message']['content']
         self._append_message_to_payload("assistant", assistant_text)
         return assistant_text
-    
+
+    def stream_response(self, user_text):
+        self.payload['stream'] = True
+        self._append_message_to_payload("user", user_text)
+        s = requests.Session()
+        with s.post(self.endpoint, headers=self.headers, json=self.payload, stream=True) as response:
+            for line in response.iter_lines():
+                if line:
+                    data = line.decode('utf-8')
+                    print(data['data'])
+                    # assistant_text = data['choices'][0]['message']['content']
+                    # self._append_message_to_payload("assistant", assistant_text)
+                    # return assistant_text
+                
+        # response.raise_for_status()
+        # data = response.json()
+        # assistant_text = data['choices'][0]['message']['content']
+        # self._append_message_to_payload("assistant", assistant_text)
+        # return assistant_text
+
 
 if __name__=='__main__':
-    pass
-    # Configuration
-    # ENDPOINT = os.environ.get("OPENAI_ENDPOINT")
-    # API_KEY = os.environ.get("OPENAI_API_KEY")
+    pass 
 
-    # ai = OpenAIAPI(ENDPOINT, API_KEY)
-    # ai.system_text = "You are a helpful AI assistant who speaks in old english."
-    # ai.start_conversation()
-    # print("?? Can you do math?")
-    # response = ai.generate_response("Can you do math?")
-    # print(response)
-    # print("?? What is 9 times 9?")
-    # response = ai.generate_response("What is 9 times 9?")
-    # print(response)
-    # print("?? Can you substract 10 from the last number?")
-    # response = ai.generate_response("Can you substract 10 from the last number?")
-    # print(response)
     

@@ -4,10 +4,4 @@ services:
     env_file: .env
     ports:
       - "8000:8000"
-    entrypoint: [ "python","-m","streamlit","run","--server.port","8000","/app/demo.py"]
-  qa_app:
-    build: .
-    env_file: .env
-    ports:
-      - "8001:8001"
-    entrypoint: [ "python","-m","streamlit","run","--server.port","8001","/app/demo.py"]
+    entrypoint: [ "python","-m","streamlit","run","--server.port","8000","/app/chat.py"]

@@ -16,10 +16,10 @@ class OpenAIAPI:
     @property
     def history(self):
         return self._messages
-
+    
     @property
     def system_prompt(self):
-        return [m['content'] for m in self._messages if m['role'] == "system"][0]
+        return [m for m in self._messages if m['role'] == "system"]
 
     @system_prompt.setter
     def system_prompt(self, value):
@@ -29,16 +29,22 @@ class OpenAIAPI:
     def record_response(self, assistant_reponse):
         self._add_to_messages("assistant", assistant_reponse)
 
-    def stream_response(self, user_query):
+    def stream_response(self, user_query, ignore_history=False):
         self._add_to_messages("user", user_query)
+        if not ignore_history:
+            messages = self._messages
+        else:
+            messages = self.system_prompt + [{"role": "user", "content": user_query}]
+
         response = self._client.chat.completions.create(
             stream=True,
-            messages=self._messages, 
+            messages=messages, 
             model="gpt4o")
         
         for chunk in response:
             if len(chunk.choices) > 0:
                 yield chunk.choices[0].delta.content if chunk.choices[0].delta.content is not None else ""
+
 
 if __name__=='__main__':
     import os 

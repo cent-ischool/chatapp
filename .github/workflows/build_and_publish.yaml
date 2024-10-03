@@ -9,7 +9,7 @@ jobs:
     publish_to_ghcr:
       runs-on: ubuntu-latest
       steps:
-        - name: Checkout this code
+        - name: Checkout this repo
           uses: actions/checkout@v4
 
         - name: Set up Docker Buildx
@@ -23,3 +23,12 @@ jobs:
             docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}:latest --tag ghcr.io/${{ github.repository }}:${{github.sha}}
             docker push ghcr.io/${{ github.repository }}:${{github.sha}}
             docker push ghcr.io/${{ github.repository }}:latest
+
+        - name: Checkout the deploy repo
+          uses: actions/checkout@v4
+          with:
+            repository: 'cent-ischool/chatapp-deploy'
+            #token:  secrets.DEPLOY_REPO_TOKEN 
+
+        - name: Write the SHA to the deploy repo
+          run: echo ${{ github.sha }} > chatapp-deploy/SHA

@@ -4,6 +4,8 @@ import chatlogger
 
 from openaiapi import OpenAIAPI
 
+CHAT_DEFAULT_TEXT = "Type a message..."
+SEARCH_DEFAULT_TEXT = "Type a search query..."
 
 def header():
     st.title("Some AI Experiment")

@@ -33,9 +33,10 @@ jobs:
             github-server-url: 'https://github.com'
             token: ${{ secrets.PAT }}
 
-        - name: Write the SHA to the deploy repo
+        - name: Write the SHA to the deploy repo overwrite the values.yaml
           run: |
             echo ${{ github.sha }} > chatapp-deploy/SHA
+            sed -i 's/\(CI_BUILD:\).*/\1 ${{ github.sha }}/' chatapp-deploy/chatapp/values.yaml
             
         - name: git commit and push trigger CD 
           run: |

@@ -3,5 +3,11 @@ services:
     build: .
     env_file: .env
     ports:
-      - "8000:8000"
-    entrypoint: [ "python","-m","streamlit","run","--server.port","8000","/app/chat.py"]
+      - "$STREAMLIT_CHAT_APP_PORT:$STREAMLIT_CHAT_APP_PORT"
+    entrypoint: [ "python","-m","streamlit","run","--server.port","$STREAMLIT_CHAT_APP_PORT","/app/chat_app.py"]
+  admin_app:
+    build: .
+    env_file: .env
+    ports:
+      - "$STREAMLIT_ADMIN_APP_PORT:$STREAMLIT_ADMIN_APP_PORT"
+    entrypoint: [ "python","-m","streamlit","run","--server.port","$STREAMLIT_ADMIN_APP_PORT","/app/admin/admin_app.py"]

@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from msal_streamlit_authentication import msal_authentication
 
@@ -10,10 +11,10 @@ else:
 
 login_token = msal_authentication(
     auth={
-        "clientId": "f6958edd-646f-4e84-895a-ede5aa18036e",
-        "authority": "https://login.microsoftonline.com/4278a402-1a9e-4eb9-8414-ffb55a5fcf1e",
-        "redirectUri": "http://localhost:8501/",
-        "postLogoutRedirectUri": "http://localhost:8501/"
+        "clientId": os.environ["MSAL_CLIENT_ID"],
+        "authority": os.environ["MSAL_AUTHORITY"],
+        "redirectUri": "/",
+        "postLogoutRedirectUri": "/"
     }, # Corresponds to the 'auth' configuration for an MSAL Instance
     cache={
         "cacheLocation": "sessionStorage",

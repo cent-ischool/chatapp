@@ -9,7 +9,7 @@ jobs:
     publish_to_ghcr:
       runs-on: ubuntu-latest
       steps:
-        - name: Checkout code
+        - name: Checkout this code
           uses: actions/checkout@v4
 
         - name: Set up Docker Buildx
@@ -20,6 +20,6 @@ jobs:
 
         - name: Build and push
           run: |
-            docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}:latest -tag ghcr.io/${{ github.repository }}:${{github.sha}}
+            docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}:latest --tag ghcr.io/${{ github.repository }}:${{github.sha}}
             docker push ghcr.io/${{ github.repository }}:${{github.sha}}
             docker push ghcr.io/${{ github.repository }}:latest

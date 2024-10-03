@@ -5,6 +5,7 @@ on:
     branches:
       - main
 
+
 jobs:
     publish_to_ghcr:
       runs-on: ubuntu-latest
@@ -18,11 +19,11 @@ jobs:
         - name: Login to GitHub Container Registry
           run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-        - name: Build and push
-          run: |
-            docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}:latest --tag ghcr.io/${{ github.repository }}:${{github.sha}}
-            docker push ghcr.io/${{ github.repository }}:${{github.sha}}
-            docker push ghcr.io/${{ github.repository }}:latest
+        # - name: Build and push
+        #   run: |
+        #     docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}:latest --tag ghcr.io/${{ github.repository }}:${{github.sha}}
+        #     docker push ghcr.io/${{ github.repository }}:${{github.sha}}
+        #     docker push ghcr.io/${{ github.repository }}:latest
 
         - name: Checkout the deploy repo
           uses: actions/checkout@v4
@@ -30,7 +31,7 @@ jobs:
             repository: 'cent-ischool/chatapp-deploy'
             path: 'chatapp-deploy'
             github-server-url: 'https://github.com'
-            token: ${{ github.token }}
+            token: ${{ secrets.PAT }}
 
         - name: Write the SHA to the deploy repo
           run: echo ${{ github.sha }} > chatapp-deploy/SHA

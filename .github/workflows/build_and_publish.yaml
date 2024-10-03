@@ -36,4 +36,12 @@ jobs:
         - name: Write the SHA to the deploy repo
           run: |
             echo ${{ github.sha }} > chatapp-deploy/SHA
-            cat chatapp-deploy/SHA
+            
+        - name: git Commit and push trigger CD 
+          run: |
+            cd chatapp-deploy
+            git config --global user.name "Github Actions Ci"
+            git config --global user.email "github-actions-ci@cent-su.org"
+            git add chatapp-deploy/SHA
+            git commit -a -m "${{ github.sha }}"
+            git push

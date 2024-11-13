@@ -3,3 +3,6 @@ pytest
 streamlit
 openai
 streamlit_msal
+pymongo[srv]
+pydantic
+pydantic-mongo

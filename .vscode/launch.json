@@ -10,7 +10,14 @@
             "type": "debugpy",
             "module": "streamlit",
             "args": ["run", "${file}"],
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}",
+                    "remoteRoot": "${workspaceFolder}"
+                }
+            ]
         }
     ]
 }

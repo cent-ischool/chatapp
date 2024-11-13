@@ -1,7 +1,13 @@
+from  add_parent_path import add_parent_path
+add_parent_path(1)
+import sys
 import os
+
 import streamlit as st
 from streamlit_msal import Msal
 import authhelper as ah
+
+
 
 def configure():
     with st.sidebar:

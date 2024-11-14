@@ -1,11 +1,15 @@
 
 from pydantic_mongo import AbstractRepository, PydanticObjectId
 
-from models import AppModel
+from dal.models import AppModel, LogModel
 
 class AppRepository(AbstractRepository[AppModel]):
     class Meta:
         collection_name = "apps"
+
+class LoggerRepository(AbstractRepository[LogModel]):
+    class Meta:
+        collection_name = "logs"
 
 
 if __name__ == '__main__':

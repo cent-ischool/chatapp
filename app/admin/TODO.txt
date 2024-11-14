@@ -1,0 +1,2 @@
+Re write this to use the DAL and Models
+Make sure you can view the logs, download and reset them

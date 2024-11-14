@@ -22,8 +22,32 @@ class AppModel(BaseModel):
     temperature: Optional[float] = 0.7
     chat_mode_querystring: str = f"?appid={id}&mode=chat&userid=SOMEUSER"
     search_mode_querystring: str = f"?appid={id}&mode=search&userid=SOMEUSER"
+    auth_email: str = ""
+    
+
+class AuthModel(BaseModel):
+    session_id: str = ""
+    email: str = ""
+    name: str = ""
+    auth_data: dict = {}
+
+    @staticmethod
+    def from_auth_data(auth_data: dict):
+        return AuthModel(session_id=auth_data["account"]["localAccountId"],
+                              email=auth_data['account']["idTokenClaims"]["preferred_username"],
+                              name=auth_data['account']["idTokenClaims"]["name"],
+                              auth_data=auth_data)
+
+class LogModel(BaseModel):
+    id: str = ObjectId().__str__()
+    appid: str = ""
+    userid: str = ""
+    timestamp: str = datetime.now().isoformat()
+    mode: str = "" # "chat" or "search"
+    role: str = "" # "user", "system", or "assistant"
+    content: str = ""
 
 
 if __name__ == '__main__':
-    pass
-
+    a = AuthModel.from_auth_data(auth_data={"account": {"localAccountId": "123", "idTokenClaims": {"preferred_username": "bob@bob", "name": "Bob"}}})
+    print(a)

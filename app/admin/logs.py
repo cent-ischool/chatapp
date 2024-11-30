@@ -1,13 +1,22 @@
+
+from dal.models import AppModel, LogModel
+from dal.repos import AppRepository, LoggerRepository
 import streamlit as st
 
 st.title("Fetch ChatApp Logs")
 
-if 'myapps' not in st.session_state or st.session_state.myapps is None:
+app_repo = AppRepository(database=st.session_state.mongodb)
+email = st.session_state.auth_model.email 
+myapps = app_repo.find_by({"auth_email" : email})
+
+if myapps is None:
     st.write("You have no apps registered")
 else:
-    myapps = st.session_state.myapps
-    appids = [f"{app['appid']} ({app['title']})" for app in myapps]
-    appid = st.selectbox("Select App", appids)
-    app = [app for app in myapps if app['appid'] == appid.split(" ")[0]][0]
-    st.dataframe(app.get('logs', {}))
-    st.page_link("home.py", label="Return to My Apps")
+    myapp_names = sorted([ f"{a.title} | {a.id}"  for a in myapps])
+    appname_and_id = st.selectbox("Select App To Fetch Logs", myapp_names)
+    if appname_and_id:
+        appname, appid = [a.strip() for a in appname_and_id.split("|")]
+        st.write(appid)
+        logs_repo = LoggerRepository(database=st.session_state.mongodb)
+        df = logs_repo.find_by({"appid": appid})
+        st.dataframe(df)

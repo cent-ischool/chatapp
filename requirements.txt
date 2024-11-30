@@ -1,3 +1,4 @@
+add-parent-path
 requests
 pytest
 streamlit

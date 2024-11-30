@@ -5,8 +5,11 @@ import os
 
 import streamlit as st
 from streamlit_msal import Msal
-import authhelper as ah
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 
+
+from dal.models import AuthModel
 
 
 def configure():
@@ -18,15 +21,12 @@ def configure():
 
     if not auth_data:
         st.session_state.auth_data = None
-        st.session_state.session_id = None
-        st.session_state.email = None
-        st.session_state.name = None
+        st.session_state.auth_model = None
 
     if auth_data:
         st.session_state.auth_data = auth_data
-        st.session_state.session_id = ah.get_session_id(auth_data)
-        st.session_state.email = ah.get_email(auth_data)
-        st.session_state.name = ah.get_name(auth_data)
+        st.session_state.auth_model = AuthModel.from_auth_data(auth_data)
+        st.session_state.mongodb = MongoClient(os.environ.get("MONGODB_CONNSTR") , server_api=ServerApi('1')).get_database("chatapp")
 
 st.set_page_config(page_title="ChatApp manager", page_icon=":material/edit:")
 
@@ -35,10 +35,11 @@ home_page = st.Page("home.py", title="My Apps", icon=":material/home:")
 logs_page = st.Page("logs.py", title="Fetch App Logs", icon=":material/assignment:")
 create_page = st.Page("create.py", title="Register App", icon=":material/add_circle:")
 delete_page = st.Page("delete.py", title="Delete App", icon=":material/delete:")
+info_page = st.Page("info.py", title="Auth Info", icon=":material/info:")
 
 configure()
-if 'auth_data' in st.session_state and st.session_state.auth_data is not None:
-    pg = st.navigation([home_page, logs_page, create_page, delete_page]) #,auth_page])
+if 'auth_data'in st.session_state and st.session_state.auth_data is not None:
+    pg = st.navigation([home_page, logs_page, create_page, delete_page, info_page]) 
 else:
     pg = st.navigation([not_logged_in_page])
 

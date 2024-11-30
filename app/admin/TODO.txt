@@ -1,3 +1,2 @@
-Re write this to use the DAL and Models
-Make sure you can view the logs, download and reset them
-get deployment working again
+Cleanup user interactions for create and delete
+show table of logs...

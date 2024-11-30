@@ -6,25 +6,36 @@ from pymongo import MongoClient
 from typing import Optional, List
 
 
-CHAT_DEFAULT_TEXT = "Ask me something."
+PLACEHOLDER_TEXT = "Type something."
 SEARCH_DEFAULT_TEXT = "Search for something."
 SYSTEM_PROMPT_DEFAULT = "You are a Helpful AI Assistant"
 
 
 class AppModel(BaseModel):
+    # metadata
     id: str = ObjectId().__str__()
+    auth_email: str = ""
     created: str = datetime.now().isoformat()
+    mode: str = "chat" # "chat" or "search"
+
+    # ui
     title: str = ""
     caption: str = ""
-    system_prompt: str = SYSTEM_PROMPT_DEFAULT
-    search_placeholder: str = SEARCH_DEFAULT_TEXT
-    chat_placeholder: str = CHAT_DEFAULT_TEXT
-    temperature: Optional[float] = 0.7
-    chat_mode_querystring: str = f"?appid={id}&mode=chat&userid=SOMEUSER"
-    search_mode_querystring: str = f"?appid={id}&mode=search&userid=SOMEUSER"
-    auth_email: str = ""
-    
+    user_avatar: str = "👤"
+    assistant_avatar: str = "🤖"
+    placeholder: str = PLACEHOLDER_TEXT
 
+    # ai
+    system_prompt: str = SYSTEM_PROMPT_DEFAULT
+    temperature: Optional[float] = 0.7
+    welcome_message: str = ""
+
+
+    def build_querystring(self):
+        querystring = f"?appid={self.id}&mode={self.mode}&userid=SOMEUSER"
+        return querystring
+
+    
 class AuthModel(BaseModel):
     session_id: str = ""
     email: str = ""

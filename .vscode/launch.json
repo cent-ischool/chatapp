@@ -5,11 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Streamlit: run",
+            "name": "Streamlit: Admin",
             "request" : "launch",
             "type": "debugpy",
             "module": "streamlit",
-            "args": ["run", "${file}"],
+            "args": ["run", "./app/admin/app.py"],
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}",
+                    "remoteRoot": "${workspaceFolder}"
+                }
+            ]
+        },
+        {
+            "name": "Streamlit: App",
+            "request" : "launch",
+            "type": "debugpy",
+            "module": "streamlit",
+            "args": ["run", "./app/chat/app.py"],
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
             "pathMappings": [
@@ -19,5 +34,6 @@
                 }
             ]
         }
+
     ]
 }

@@ -17,9 +17,10 @@ Run with Strealit
 
 TODO - 
 
-[ ]  registration to setup 
-    - title
-    - theme
-    - system prompt
-    - user
+[x] new model
+[x] create 
+[ ] edit
+[ ] preview
+[ ] update app behavior based on model
+[ ]  registration
 

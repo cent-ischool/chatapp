@@ -18,5 +18,6 @@ else:
         appname, appid = [a.strip() for a in appname_and_id.split("|")]
         st.write(appid)
         logs_repo = LoggerRepository(database=st.session_state.mongodb)
-        df = logs_repo.find_by({"appid": appid})
-        st.dataframe(df)
+        mylogs = logs_repo.find_by({"appid": appid})
+        mylogs2 = [ l.model_dump() for l in mylogs]
+        st.dataframe(mylogs2)

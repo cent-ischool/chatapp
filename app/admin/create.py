@@ -12,36 +12,35 @@ if 'app_model' not in st.session_state or st.session_state.app_model is None:
 else:
     app = AppModel.model_validate(st.session_state.app_model)
 
-st.title("Register Chat Application")
-tabs = st.tabs(['⚙️ Configure','🔎 Preview','💾 Finalize Registration'])
-with tabs[0]:
-    with st.form("registration_form"):
-        st.write("#### Settings")
-        st.text_input("App ID", value=app.id, key="app_id", disabled=True)
-        st.text_input("Created", value=app.created, key="created", disabled=True)
-        app.title = st.text_input("Enter Heading", value = app.title)
-        app.caption = st.text_input("Enter Caption", value = app.caption)
-        app.search_placeholder = st.text_input("Enter Search Placeholder", value=app.search_placeholder)
-        app.chat_placeholder = st.text_input("Enter Chat Placeholder", value=app.chat_placeholder)
-        app.system_prompt = st.text_area("Enter System Prompt. These instructions control how the model behaves.", value=app.system_prompt)
-        app.temperature = st.slider("Temperature", min_value=0.0, max_value=2.0, value=app.temperature)
-        app.auth_email = st.session_state.auth_model.email
-        settings_submit = st.form_submit_button("Save Configuration")
-        if settings_submit:
-            pass
-with tabs[1]:
-    if settings_submit:
-        with st.container(border=True):
-            st.title(app.title)
-            st.caption(app.caption)
-            st.text_input("Search Box Placeholder:", placeholder=app.search_placeholder)
-            st.text_input("Chat Box Placeholder:", placeholder=app.chat_placeholder)
-    else:
-        st.write("Go to configure and save your settings first")
-with tabs[2]:
-    st.write("#### Finalize")
-    st.dataframe(app)
-    save_submit = st.button("Save Application", disabled=st.session_state.app_model is None)
+app.auth_email = st.session_state.auth_model.email
+
+st.title("Create Application")
+app.mode = st.selectbox("Select Mode", ["chat", "search"], index=0 if app.mode == "chat" else 1)
+mode = app.mode.title()
+with st.form("registration_form"):
+
+    st.write("#### User Interface")
+    app.title = st.text_input("Enter Heading", value = app.title, placeholder="Title of the app.")
+    app.caption = st.text_area("Enter Caption", value = app.caption, placeholder="Description of the app or any user instructions.")
+    app.placeholder = st.text_input(f"Enter {mode} Placeholder", value=app.placeholder, placeholder=f"What's inside the empty {mode} box. e.g. Type something.")
+    app.user_avatar = st.text_input(f"{mode} User Avatar", value=app.user_avatar, placeholder="Enter an Emoji or URL to a picture for the user.")
+    app.assistant_avatar = st.text_input(f"{mode} AI Avatar", value=app.assistant_avatar, placeholder="Enter an Emoji or URL to a picture for the AI.")
+
+    st.write("#### AI Behavior")
+    app.system_prompt = st.text_area("Enter System Prompt. These instructions control how the model behaves.", value=app.system_prompt)
+    app.temperature = st.slider("Temperature", min_value=0.0, max_value=2.0, value=app.temperature)
+    if app.mode == "chat":
+        app.welcome_message = st.text_area(f"{mode} Welcome Message", value=app.welcome_message, placeholder="This message will output from the AI, when they first open the app.")
+
+    st.write("#### Settings")
+    st.text_input("App ID", value=app.id, key="app_id", disabled=True)
+    st.text_input("Created", value=app.created, key="created", disabled=True)
+    st.text_input("Auth Email", value=app.auth_email, key="auth_email", disabled=True)
+    st.write("Query String:")
+    st.code(app.build_querystring())
+
+    save_submit = st.form_submit_button("Save App")
+    
     if save_submit:
         repo = AppRepository(database=st.session_state.mongodb)
         repo.save(app)

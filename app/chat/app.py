@@ -26,23 +26,34 @@ def footer():
         st.text(f"appid: {st.session_state.appid}, userid: {st.session_state.userid}")
     
 def show_chatmode(app: AppModel):
+    st.markdown(
+        """
+    <style>
+        .st-emotion-cache-janbn0 {
+            flex-direction: row-reverse;
+            text-align: right;
+        }
+    </style>
+    """,
+        unsafe_allow_html=True,
+    )
     logger = ChatLogger(st.session_state.mongodb)
     header(app)
+
     # Display chat messages from history on app rerun
     for message in st.session_state.ai.history[1:]:
-        with st.chat_message(message["role"]):
+        with st.chat_message(message["role"]): # <-- Inject avatar here
             st.markdown(message["content"])
 
     # React to user input
     prompt = st.chat_input(placeholder=app.chat_placeholder, key="chat_widget") #, r)
     if prompt:
         # Display user message in chat message container
-        with st.chat_message("user"):
+        with st.chat_message("user", avatar="➡️"):
             st.write(prompt)
 
-
         # Display assistant response in chat message container
-        with st.chat_message("assistant"):
+        with st.chat_message("assistant", avatar="https://banner2.cleanpng.com/20180426/bhe/avezgzct5.webp", ):
             with st.spinner("Thinking..."):
                 logger.log_user_chat(st.session_state.appid, st.session_state.userid, prompt)
                 response = st.write_stream(st.session_state.ai.stream_response(prompt))
@@ -60,11 +71,11 @@ def show_searchmode(app: AppModel):
             submit = st.form_submit_button("Search") #, on_click=clear_form)
             
     if prompt:
-        with st.chat_message("user"):
+        with st.chat_message("search_query", avatar="🔍"):
             st.write(prompt)
 
         # Display assistant response in chat message container
-        with st.chat_message("assistant"):
+        with st.chat_message("search_output", avatar="🔎"):
             with st.spinner("Searching..."):
                 logger.log_user_search(st.session_state.appid, st.session_state.userid, prompt)
                 response = st.write_stream(st.session_state.ai.stream_response(prompt, ignore_history=True))
@@ -107,7 +118,9 @@ if 'appid' not in st.session_state:
             ai.system_prompt = app.system_prompt
             st.session_state.ai = ai
             logger.log_system_prompt(appid, userid, app.system_prompt)
-
+            # Initial first message
+            welcome_message = "Hello! I'm Chip your reasoning companion. How can I help you today?"
+            st.session_state.ai.record_response(welcome_message)
 
 
 # Main Logic...

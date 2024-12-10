@@ -1,10 +1,13 @@
 
 import streamlit as st
+from streamlit_javascript import st_javascript
 from datetime import datetime, timezone
 from bson import ObjectId
 
 from dal.models import AppModel
 from dal.repos import AppRepository
+
+site = st_javascript("await fetch('').then(r => window.parent.location.href)")
 
 if 'app_model' not in st.session_state or st.session_state.app_model is None:
     app = AppModel(id=ObjectId().__str__(), created=datetime.now().isoformat())
@@ -36,8 +39,8 @@ with st.form("registration_form"):
     st.text_input("App ID", value=app.id, key="app_id", disabled=True)
     st.text_input("Created", value=app.created, key="created", disabled=True)
     st.text_input("Auth Email", value=app.auth_email, key="auth_email", disabled=True)
-    st.write("Query String:")
-    st.code(app.build_querystring())
+    st.write("URL:")
+    st.code(app.build_url(site))
 
     save_submit = st.form_submit_button("Save App")
     
@@ -45,5 +48,7 @@ with st.form("registration_form"):
         repo = AppRepository(database=st.session_state.mongodb)
         repo.save(app)
         st.session_state.app_model = None
-        st.write("Application saved!")
-        st.page_link("home.py", label="Return to My Apps")
+        st.toast("Application Created!")
+        st.write("Application Created!")
+        st.page_link("home.py", label="Return to My Apps", icon=":material/arrow_back:")
+        st.stop()

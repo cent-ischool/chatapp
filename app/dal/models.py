@@ -6,6 +6,7 @@ from pymongo import MongoClient
 from typing import Optional, List
 
 
+
 PLACEHOLDER_TEXT = "Type something."
 SEARCH_DEFAULT_TEXT = "Search for something."
 SYSTEM_PROMPT_DEFAULT = "You are a Helpful AI Assistant"
@@ -31,9 +32,9 @@ class AppModel(BaseModel):
     welcome_message: str = ""
 
 
-    def build_querystring(self):
+    def build_url(self, site):
         querystring = f"?appid={self.id}&mode={self.mode}&userid=SOMEUSER"
-        return querystring
+        return f"{site}{querystring}"
 
     
 class AuthModel(BaseModel):

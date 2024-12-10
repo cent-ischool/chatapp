@@ -31,7 +31,7 @@ st.set_page_config(page_title="ChatApp manager", page_icon=":material/edit:")
 
 not_logged_in_page = st.Page("not_logged_in.py", title="Welcome to the ChatApp Manager", icon=":material/home:")
 home_page = st.Page("home.py", title="My Apps", icon=":material/home:")
-logs_page = st.Page("logs.py", title="Fetch App Logs", icon=":material/assignment:")
+logs_page = st.Page("logs.py", title="Fetch Logs", icon=":material/assignment:")
 create_page = st.Page("create.py", title="Create App", icon=":material/add_circle:")
 preview_page = st.Page("preview.py", title="Preview App", icon=":material/preview:")
 edit_page = st.Page("edit.py", title="Edit App", icon=":material/edit:")
@@ -40,7 +40,7 @@ info_page = st.Page("info.py", title="Auth Info", icon=":material/info:")
 
 configure()
 if 'auth_data'in st.session_state and st.session_state.auth_data is not None:
-    pg = st.navigation([home_page, logs_page, create_page, preview_page, edit_page, delete_page, info_page]) 
+    pg = st.navigation([home_page, create_page, preview_page, edit_page, logs_page, delete_page, info_page]) 
 else:
     pg = st.navigation([not_logged_in_page])
 

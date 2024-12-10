@@ -19,8 +19,10 @@ TODO -
 
 [x] new model
 [x] create 
-[ ] edit
-[ ] preview
-[ ] update app behavior based on model
-[ ]  registration
+[x] edit
+[x] preview
+[x] update app behavior based on model
+[x]  registration
+
+[x] Update the app page to use the new settings
 

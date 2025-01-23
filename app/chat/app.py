@@ -15,8 +15,10 @@ from dal.repos import AppRepository
 
 CHAT_DEFAULT_TEXT = "Type a message..."
 SEARCH_DEFAULT_TEXT = "Type a search query..."
-USER_AVATAR = "./app/icons/person-circle.svg"
-ASSISTANT_AVATAR = "./app/icons/avezgzct5.webp"
+
+# this is correct for deployment but for local
+USER_AVATAR = "chat/images/person-circle.svg"
+ASSISTANT_AVATAR = "chat/images/avezgzct5.webp"
 
 def header(app: AppModel):
     st.title(app.title)

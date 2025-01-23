@@ -24,9 +24,10 @@
             "request" : "launch",
             "type": "debugpy",
             "module": "streamlit",
-            "args": ["run", "./app/chat/app.py"],
+            "args": ["run", "./chat/app.py"],
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
+            "cwd": "${workspaceFolder}/app",
             "pathMappings": [
                 {
                     "localRoot": "${workspaceFolder}",

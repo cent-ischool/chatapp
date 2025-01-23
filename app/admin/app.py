@@ -14,9 +14,11 @@ from dal.models import AuthModel
 def configure():
     with st.sidebar:
         auth_data = Msal.initialize_ui(
-            client_id=os.environ["MSAL_CLIENT_ID"], authority=os.environ["MSAL_AUTHORITY"],
+            client_id=os.environ["MSAL_CLIENT_ID"], 
+            authority=os.environ["MSAL_AUTHORITY"],
             sign_out_label="Sign Out 🍊",
-            disconnected_label="Sign In...",sign_in_label="SU Login 🍊")
+            disconnected_label="Sign In...",
+            sign_in_label="SU Login 🍊")
 
     if not auth_data:
         st.session_state.auth_data = None

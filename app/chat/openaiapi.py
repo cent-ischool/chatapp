@@ -38,8 +38,8 @@ class OpenAIAPI:
 
         response = self._client.chat.completions.create(
             stream=True,
-            messages=messages, 
-            model="gpt4o")
+            messages=messages,
+            model="gpt-4o-mini")
         
         for chunk in response:
             if len(chunk.choices) > 0:

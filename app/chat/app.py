@@ -42,7 +42,12 @@ def show_chatmode(app: AppModel):
 
     # Display chat messages from history on app rerun
     for message in st.session_state.ai.history[1:]:
-        with st.chat_message(message["role"]): # <-- Inject avatar here
+        if message["role"] == "user":
+            avatar = app.user_avatar
+        else: # "assistant"
+            avatar = app.assistant_avatar
+
+        with st.chat_message(message["role"], avatar=avatar): # <-- Inject avatar here
             st.markdown(message["content"])
 
     # React to user input
@@ -61,21 +66,24 @@ def show_chatmode(app: AppModel):
                 logger.log_assistant_chat(st.session_state.appid, st.session_state.userid, response)
 
 def show_searchmode(app: AppModel):   
+    def clear_form():
+        st.session_state.search_widget = ""
+
     logger = ChatLogger(st.session_state.mongodb)
     header(app) 
-    with st.form("search_form", clear_on_submit=True, border=False):
-        col1,col2 = st.columns([3,1], vertical_alignment="bottom")
-        with col1:
-            prompt = st.text_input(label="", placeholder=app.placeholder, key="search_widget")
-        with col2:
-            submit = st.form_submit_button("Search") #, on_click=clear_form)
+#    with st.form("search_form", clear_on_submit=False, border=False):
+    col1,col2,col3 = st.columns([76,12,12], vertical_alignment="bottom")
+    with col1:
+        prompt = st.text_input(label="", placeholder=app.placeholder, key="search_widget", value=st.session_state.get("search_widget",None))
+    with col2:
+        submit = st.button("Search") #, on_click=clear_form)
+    with col3:
+        clear = st.button("Clear", on_click=clear_form) #, on_click=clear_form)
             
     if prompt:
-        with st.chat_message("search_query", avatar=app.user_avatar):
-            st.write(prompt)
 
         # Display assistant response in chat message container
-        with st.chat_message("search_output", avatar=app.assistant_avatar):
+        with st.chat_message("search_output", avatar="🔎"):
             with st.spinner("Searching..."):
                 logger.log_user_search(st.session_state.appid, st.session_state.userid, prompt)
                 response = st.write_stream(st.session_state.ai.stream_response(prompt, ignore_history=True))

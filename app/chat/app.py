@@ -15,6 +15,8 @@ from dal.repos import AppRepository
 
 CHAT_DEFAULT_TEXT = "Type a message..."
 SEARCH_DEFAULT_TEXT = "Type a search query..."
+USER_AVATAR = "./app/icons/person-circle.svg"
+ASSISTANT_AVATAR = "./app/icons/avezgzct5.webp"
 
 def header(app: AppModel):
     st.title(app.title)
@@ -29,7 +31,7 @@ def show_chatmode(app: AppModel):
     st.markdown(
         """
     <style>
-        .st-emotion-cache-janbn0 {
+        .st-emotion-cache-1c7y2kd {
             flex-direction: row-reverse;
             text-align: right;
         }
@@ -43,9 +45,9 @@ def show_chatmode(app: AppModel):
     # Display chat messages from history on app rerun
     for message in st.session_state.ai.history[1:]:
         if message["role"] == "user":
-            avatar = app.user_avatar
+            avatar = USER_AVATAR
         else: # "assistant"
-            avatar = app.assistant_avatar
+            avatar = ASSISTANT_AVATAR
 
         with st.chat_message(message["role"], avatar=avatar): # <-- Inject avatar here
             st.markdown(message["content"])
@@ -54,11 +56,11 @@ def show_chatmode(app: AppModel):
     prompt = st.chat_input(placeholder=app.placeholder, key="chat_widget") #, r)
     if prompt:
         # Display user message in chat message container
-        with st.chat_message("user", avatar=app.user_avatar):
+        with st.chat_message("user", avatar=USER_AVATAR):
             st.write(prompt)
 
         # Display assistant response in chat message container
-        with st.chat_message("assistant", avatar=app.assistant_avatar):
+        with st.chat_message("assistant", avatar=ASSISTANT_AVATAR):
             with st.spinner("Thinking..."):
                 logger.log_user_chat(st.session_state.appid, st.session_state.userid, prompt)
                 response = st.write_stream(st.session_state.ai.stream_response(prompt))
